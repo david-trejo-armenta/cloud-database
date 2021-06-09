@@ -8,10 +8,30 @@ app=Flask(__name__)
 
 api=Api(app)
 
+
+""""
+
+database.db.Badges.
+
+.database is the config file
+.db is the database name
+.NameCollection is the next part is the collection
+
+"""
+
+class Test(Resource):
+    def get(self):
+        return jsonify({"message":"Test OK, you are connected"})
+
 class Badge(Resource):
+
+    def get(self,by,data):
+        response = self.abort_if_not_exist(by, data)
+        response['_id']= str(response['_id'])
+        return jsonify(response)
     
     def post(self):
-        database.db.Badges.insert_one(
+        _id = str(database.db.Badges.insert_one(
             {
                 'header_img_url': request.json['header_img_url'],
                 'profile_picture_url': request.json['profile_picture_url'],
@@ -22,13 +42,24 @@ class Badge(Resource):
                 'likes': request.json['likes'],
                 'posts': request.json['posts'],
             }
-        )
+        ).inserted_id)
+
+        return jsonify({"_id":_id})
+
+    def abort_if_not_exist(self,by,data):
+        if by == "_id":
+            pass
+        else:
+            pass
 
 class AllBadge(Resource):
     """ Get all badges """
 
     def get(self):
         pass
+
+api.add_resource(Badge,'/new')
+api.add_resource(Test,'/test')
 
 if __name__ == '__main__':
     app.run(load_dotenv=True,)
