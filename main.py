@@ -15,7 +15,7 @@ api=Api(app)
 
 
 api.add_resource(Badge,'/new','/<string:by>=<string:data>/')
-api.add_resource(Badges, '/all/')
+api.add_resource(Badges, '/delete/all/')
 
 if __name__ == '__main__':
     app.run(load_dotenv=True,)

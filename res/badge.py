@@ -18,6 +18,8 @@ database.db.Badges.
 
 class Badge(Resource):
 
+    """Handling the data one badge at a time"""
+
     def get(self,by,data):
         response = self.abort_if_not_exist(by, data)
         response['_id']= str(response['_id'])

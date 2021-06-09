@@ -5,8 +5,16 @@ from bson.json_util import  ObjectId
 import db_config as database
 
 
-class AllBadge(Resource):
+class Badges(Resource):
     """ Get all badges """
 
     def get(self):
-        pass
+        response =list(database.db.Badges.find())
+        
+        for doc in response:
+            doc['_id'] = str(doc['_id'])
+
+        return jsonify(response)
+
+    def delete(self):
+        return database.db.Delete.delete_many({}).deleted_count
