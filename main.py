@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource, reqparse, abort
 from flask_pymongo import pymongo
+from bson.json_util import dumps, ObjectId
 import db_config as database
 
 
@@ -48,9 +49,14 @@ class Badge(Resource):
 
     def abort_if_not_exist(self,by,data):
         if by == "_id":
-            pass
+            response = database.db.Badges.find_one({"_id":ObjectId(data)})
         else:
-            pass
+            response = database.db.Badges.find_one({f"{by}": data})
+
+        if response:
+            return response
+        else:
+            abort(jsonify({"status":404, f"{by}":f"{data} not found"}))
 
 class AllBadge(Resource):
     """ Get all badges """
@@ -58,7 +64,7 @@ class AllBadge(Resource):
     def get(self):
         pass
 
-api.add_resource(Badge,'/new')
+api.add_resource(Badge,'/new','/<string:by>=<string:data>/')
 api.add_resource(Test,'/test')
 
 if __name__ == '__main__':
