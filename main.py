@@ -42,6 +42,8 @@ class Badge(Resource):
                 'followers': request.json['followers'],
                 'likes': request.json['likes'],
                 'posts': request.json['posts'],
+                'posts':request.json['posts'],
+                
             }
         ).inserted_id)
 
